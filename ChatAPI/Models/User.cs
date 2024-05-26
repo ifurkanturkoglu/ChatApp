@@ -9,6 +9,7 @@ namespace ChatAPI.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public DateTime UserCreatedTime { get; set; }
         public ICollection<UserFriend>? Friends { get; set; }
         public ICollection<UserGroup>? UserGroups { get; set; }
         public ICollection<Message>? Messages { get; set; }

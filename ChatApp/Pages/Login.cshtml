@@ -1,0 +1,22 @@
+﻿@page
+@model ChatApp.Models.LoginViewModel
+@{
+}
+
+
+
+<form method="post">
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label>E-mail or Username</label>
+                <input placeholder="E-mail or Username" type="text" class="form-control" asp-for="EmailOrUsername" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input placeholder="Password" type="password" class="form-control" asp-for="Password" />
+            </div>
+            <button type="submit" class="btn btn-outline-primary">Primary</button>
+        </div>
+    </div>
+</form>
