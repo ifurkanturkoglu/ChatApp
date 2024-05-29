@@ -8,13 +8,7 @@ namespace ChatAPI.Relations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.Property(a => a.UserName).HasColumnName("UserName").IsRequired().HasMaxLength(64);
-            
             builder.Property(a => a.Name).HasColumnName("Name").IsRequired().HasMaxLength(120);
-           
-            builder.Property(a => a.Email).HasColumnName("Email").IsRequired().HasMaxLength(120);
-            
-            builder.Property(a => a.Password).HasColumnName("Password").IsRequired();
 
             builder.HasMany(a => a.Messages).WithOne(a => a.User).HasForeignKey(a => a.UserId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
 

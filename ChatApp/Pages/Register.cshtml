@@ -1,0 +1,29 @@
+﻿@page
+@model ChatApp.Models.RegisterViewModel
+@{
+}
+@Model.Message
+
+<form method="post">
+    <div class="row">
+        <div class="col-12">
+            <form-group>
+                <label>Name</label>
+                <input class="form-control" placeholder="Name" type="text" asp-for="Name" />
+            </form-group>
+            <form-group>
+                <label>Username</label>
+                <input class="form-control" placeholder="Username" type="text" asp-for="Username" />
+            </form-group>
+            <form-group>
+                <label>Email</label>
+                <input class="form-control" placeholder="Email" type="email" asp-for="Email" />
+            </form-group>
+            <form-group>
+                <label>Password</label>
+                <input class="form-control" placeholder="Password" type="password" asp-for="Password" />
+            </form-group>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Register</button>
+</form>

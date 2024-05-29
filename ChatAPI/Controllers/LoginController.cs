@@ -22,7 +22,7 @@ namespace ChatAPI.Controllers
         private readonly SignInManager<User> signInManager;
 
         IOptions<TokenOption> tokenOption;
-        public LoginController(ChatDbContext _context,UserManager<User> _userManager,SignInManager<User> _signInManager,IOptions<TokenOption> _tokenOption)
+        public LoginController(ChatDbContext _context, UserManager<User> _userManager, SignInManager<User> _signInManager, IOptions<TokenOption> _tokenOption)
         {
             context = _context;
             userManager = _userManager;
@@ -30,52 +30,54 @@ namespace ChatAPI.Controllers
             tokenOption = _tokenOption;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SignUp(User user)
+        [HttpPost("/api/login/signup")]
+        public async Task<IActionResult> SignUp([FromBody]RegisterViewModel user)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return BadRequest(new {message = "Invalid data. Try again"});
+                return BadRequest(new { message = "Invalid data. Try again" });
             }
-
+            
             User newUser = new User
             {
                 Name = user.Name,
                 Email = user.Email,
-                UserName = user.Name,
-                Password = user.Password,
+                UserName = user.Username,
+                PasswordHash = user.Password,
                 UserCreatedTime = DateTime.Now,
             };
 
-            var result = await userManager.CreateAsync(newUser, newUser.Password);
+            var result = await userManager.CreateAsync(newUser, newUser.PasswordHash);
 
             if (!result.Succeeded) {
-                return StatusCode(500, new { message = "Server-side error.User creation failed" });
+                return StatusCode(500, new { message = result.Errors.First() });
             }
-            
 
-            return Ok(new {message = "Complete successfully " });
+
+            return Ok(new { message = "Complete successfully " });
         }
 
 
-        [HttpPost("api/auth/signin")]
-        public async Task<IActionResult> SignIn(LoginViewModel loginModel)
+        [HttpPost("/api/login/signin")]
+        public async Task<IActionResult> SignIn([FromBody]LoginViewModel loginModel)
         {
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid data");
             }
 
-            var user = await userManager.FindByEmailAsync(loginModel.EmailOrUsername) 
-                ?? await userManager.FindByNameAsync(loginModel.EmailOrUsername);
-          
+            var user = await userManager.FindByNameAsync(loginModel.EmailOrUsername)
+                ?? await userManager.FindByEmailAsync(loginModel.EmailOrUsername);
+                 
 
-            if(user == null)
+
+            if (user == null)
             {
                 return BadRequest("User not found");
             }
             //IsPersistent beni hatırla seçeneği koy 
-            var result = await signInManager.CheckPasswordSignInAsync(user, loginModel.Password,lockoutOnFailure:false);
+            var result = await signInManager.CheckPasswordSignInAsync(user, loginModel.Password, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
@@ -85,12 +87,12 @@ namespace ChatAPI.Controllers
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, user.UserName));
 
                 JwtSecurityToken token = new JwtSecurityToken(
-                    issuer:tokenOption.Value.Issuer,
-                    audience:tokenOption.Value.Audience,
-                    claims:claims,
+                    issuer: tokenOption.Value.Issuer,
+                    audience: tokenOption.Value.Audience,
+                    claims: claims,
                     expires: DateTime.Now.AddDays(tokenOption.Value.Expiration),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(tokenOption.Value.SecretKey)),SecurityAlgorithms.HmacSha256 )             
+                        Encoding.UTF8.GetBytes(tokenOption.Value.SecretKey)), SecurityAlgorithms.HmacSha256)
                 );
 
                 JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -100,7 +102,7 @@ namespace ChatAPI.Controllers
                 return Ok(userToken);
             }
 
-            return BadRequest(new { message = "Error" });
+            return new JsonResult(new { loginModel.EmailOrUsername,loginModel.Password });
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Reflection;
 using System.Text;
 
@@ -25,25 +26,22 @@ namespace ChatApp.Models
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var httpClientHandler = new HttpClientHandler();
-  
-            httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            HttpClient client = new HttpClient(httpClientHandler);
-            client = httpClient.CreateClient();
+            HttpClient client = httpClient.CreateClient();
 
-            var content = new StringContent(JsonConvert.SerializeObject(new { EmailOrUsername = EmailOrUsername, Password = Password }),Encoding.UTF8,"application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(new { EmailOrUsername = EmailOrUsername, Password = Password }), Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("http://localhost:7009/api/auth/signin", content);
-
-            Console.Write("girdi");
+            var response = await client.PostAsync("https://localhost:7009/api/login/signin", content);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return RedirectToPage("/MainPage");
+                return RedirectToPage("/ChatPage",responseContent);
             }
 
             return Page();
         }
+
+
+
     }
 }
