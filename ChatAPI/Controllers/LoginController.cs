@@ -99,7 +99,7 @@ namespace ChatAPI.Controllers
 
                 string userToken = tokenHandler.WriteToken(token);
 
-                return Ok(userToken);
+                return Ok(new { token = userToken });
             }
 
             return new JsonResult(new { loginModel.EmailOrUsername,loginModel.Password });

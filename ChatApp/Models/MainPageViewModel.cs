@@ -23,21 +23,23 @@ namespace ChatApp.Models
         {
             string token = TempData["Token"].ToString();
           
+            
+            
             HttpClient newClient = client.CreateClient();
             
             newClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
            
-            var response = await newClient.GetAsync("https://localhost:7009/api/friends");
+            var responseFriends = await newClient.GetAsync("https://localhost:7009/api/chat/friends");
+            var responseGroups = await newClient.GetAsync("https://localhost:7009/api/chat/groups");
 
-
-            if (response.IsSuccessStatusCode)
+            if (responseFriends.IsSuccessStatusCode)
             {
-                var responseString = await response.Content.ReadAsStringAsync();
-                FriendList = JsonSerializer.Deserialize<List<string>>(responseString);
+                var responseFriendsString = await responseFriends.Content.ReadAsStringAsync();
+                var responseGroupsString = await responseGroups.Content.ReadAsStringAsync();
+                FriendList = JsonSerializer.Deserialize<List<string>>(responseFriendsString);
+                GroupsList = JsonSerializer.Deserialize<List<string>>(responseGroupsString);
             }
-
             //var ss = Request.Query.TryGetValue("handler", out var deneme);
-
 
             return Page();
         }
