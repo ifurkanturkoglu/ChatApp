@@ -17,14 +17,14 @@ namespace ChatAPI.Controllers
     public class LoginController : ControllerBase
     {
 
-        private readonly ChatDbContext context;
+        
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
         IOptions<TokenOption> tokenOption;
-        public LoginController(ChatDbContext _context, UserManager<User> _userManager, SignInManager<User> _signInManager, IOptions<TokenOption> _tokenOption)
+        public LoginController( UserManager<User> _userManager, SignInManager<User> _signInManager, IOptions<TokenOption> _tokenOption)
         {
-            context = _context;
+            
             userManager = _userManager;
             signInManager = _signInManager;
             tokenOption = _tokenOption;

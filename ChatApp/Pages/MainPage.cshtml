@@ -1,0 +1,41 @@
+﻿@page
+@model ChatApp.Models.MainPageViewModel
+@{
+}
+
+<div class="tabs">
+    <button class="tablinks" onclick="openTab(event, 'Friends')">Arkadaşlar</button>
+    <button class="tablinks" onclick="openTab(event, 'Groups')">Gruplar</button>
+</div>
+
+<div id="Friends" class="tabcontent">
+    @await Html.PartialAsync("FriendsPartial", Model.FriendList)
+</div>
+
+<div id="Groups" class="tabcontent" style="display:none;">
+    @await Html.PartialAsync("GroupsPartial", Model.GroupsList)
+</div>
+
+@section Scripts{
+    <script>
+        function openTab(event, tabName) {
+            
+
+            var tabcontent = document.getElementsByClassName("tabcontent");
+
+            for (int i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            var tablinks = document.getElementsByClassName("tablinks");
+            
+            for (int i = 0; i < tablinks.length;i++){
+                tablinks[i].className = tablinks[i].className.replace("active", "");
+            }
+
+            document.getElementById(tabname).style.display = "block";
+            event.currentTarget.className += "active";
+
+        }
+    </script>
+}

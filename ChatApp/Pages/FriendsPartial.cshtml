@@ -1,0 +1,11 @@
+﻿@model List<string>
+
+<div>
+    <h3>Arkadaşlar</h3>
+    <ul>
+        @foreach (var friend in Model)
+        {
+            <li>@friend</li>
+        }
+    </ul>
+</div>

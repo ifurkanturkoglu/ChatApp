@@ -1,4 +1,5 @@
-﻿using ChatAPI.Models;
+﻿using ChatAPI.Interfaces;
+using ChatAPI.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -6,18 +7,20 @@ namespace ChatAPI.Hubs
 {
     public class ChatHub : Hub
     {
-        public  ChatDbContext context;
+        private readonly ChatDbContext context;
 
-        public ChatHub(ChatDbContext _context)
+        private readonly IMessageService messageService;
+
+        public ChatHub(ChatDbContext _context,IMessageService _messageService)
         {
             context = _context;
+            messageService = _messageService;
         }
 
         public async Task AddFriend(string username)
         {
             try
             {
-
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"{username}");
                 //context.Groups.Add()
                 Group newGroup = new Group

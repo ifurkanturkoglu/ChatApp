@@ -31,17 +31,15 @@ namespace ChatApp.Models
             var content = new StringContent(JsonConvert.SerializeObject(new { EmailOrUsername = EmailOrUsername, Password = Password }), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync("https://localhost:7009/api/login/signin", content);
-
+            
             if (response.IsSuccessStatusCode)
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return RedirectToPage("/ChatPage",responseContent);
+                string responseContent = await response.Content.ReadAsStringAsync();
+                TempData["Token"] = responseContent;
+                return RedirectToPage("/MainPage",responseContent);
             }
 
             return Page();
         }
-
-
-
     }
 }

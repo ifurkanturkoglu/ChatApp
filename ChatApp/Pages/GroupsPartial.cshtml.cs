@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ChatApp.Pages
 {
-    public class ChatPageModel : PageModel
+    public class GroupsPartialModel : PageModel
     {
         public void OnGet()
         {

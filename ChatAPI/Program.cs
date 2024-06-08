@@ -1,4 +1,6 @@
+using ChatAPI.Interfaces;
 using ChatAPI.Models;
+using ChatAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
 
@@ -18,6 +20,9 @@ builder.Services.AddDbContext<ChatDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+//Dependency
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 builder.Services.AddIdentity<User, IdentityRole>(options => 
 options.SignIn.RequireConfirmedEmail = false
@@ -63,7 +68,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 
 app.UseRequestLocalization();
 

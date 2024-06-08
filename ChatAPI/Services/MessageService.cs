@@ -15,7 +15,7 @@ namespace ChatAPI.Services
 
         public async Task<IEnumerable<Message>> GetMessageByGroupAsync(int gropuId)
         {
-            return await context.Messages.Where(a => a.GroupId == gropuId).ToListAsync();
+            return await context.Messages.Where(a => a.GroupId == gropuId).OrderBy(a => a.MessageTime).ToListAsync();
         }
 
         public async Task SaveMessageAsync(Message message)
